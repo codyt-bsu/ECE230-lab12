@@ -2,8 +2,8 @@ module dff(
     input Default,
     input D,
     input clk,
+    input Reset,
     output reg Q,
-    output NotQ
 );
 
     initial begin
@@ -12,6 +12,6 @@ module dff(
 
     always @(posedge Clock)
         Q <= D;
-
-    assign NotQ = ~Q;
+    always @(posedge Reset) 
+        Q <= Default
 endmodule
