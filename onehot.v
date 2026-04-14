@@ -2,55 +2,56 @@ module one_hot(
     input w,
     input Reset,
     input clk,
-    output z
+    output z,
+    output [4:0] states
 );
     wire Anext, Bnext, Cnext, Dnext, Enext;
-    wire Astate, Bstate, Cstate, Dstate, Estate;
 
     dff Adff(
-        .Reset(Reset),
+        .reset(Reset),
         .Default(1'b1),
         .D(Anext),
         .clk(clk),
-        .Q(Astate)
+        .Q(states[0])
     );
 
     dff Bdff(
-        .Reset(Reset),
+        .reset(Reset),
         .Default(1'b0),
         .D(Bnext),
         .clk(clk),
-        .Q(Bstate)
+        .Q(states[1])
     );
 
     dff Cdff(
+        .reset(Reset),
         .Default(1'b0),
         .D(Cnext),
         .clk(clk),
-        .Q(Cstate)
+        .Q(states[2])
     );
 
     dff Ddff(
-        .Reset(Reset),
+        .reset(Reset),
         .Default(1'b0),
         .D(Dnext),
         .clk(clk),
-        .Q(Dstate)
+        .Q(states[3])
     );
 
     dff Edff(
-        .Reset(Reset),
+        .reset(Reset),
         .Default(1'b0),
         .D(Enext),
         .clk(clk),
-        .Q(Estate)
+        .Q(states[4])
     );
 
-    assign z = Cstate | Estate;
+    assign z = states[2] | states[4];
 
     assign Anext = 1'b0;
-    assign Bnext = (Astate | Dstate | Estate) & ~w;
-    assign Cnext = (Bstate | Cstate) & ~w;
-    assign Dnext = w & (Astate | Bstate | Cstate);
-    assign Enext = w & (Estate | Dstate)
+    assign Bnext = (states[0] | states[3] | states[4]) & ~w;
+    assign Cnext = (states[1] | states[2]) & ~w;
+    assign Dnext = w & (states[0] | states[1] | states[2]);
+    assign Enext = w & (states[3] | states[4]);
 endmodule
