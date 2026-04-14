@@ -1,6 +1,8 @@
-module binary(
+module binarysm(
     input w,
+    input Reset,
     input clk,
+    output [2:0] state,
     output z
 );
 
@@ -31,8 +33,9 @@ module binary(
         .Q(State[2])
     );
 
-    assign z = State[1] & ~State[0];
-    assign Next[0] = w & ~State[1] & ~State[0];
-    assign Next[1] = w & (State[1] | State[0]);
+    assign z = (State[1] & ~State[0]) | (State[2]);
+    assign Next[0] = ;
+    assign Next[1] = ;
+    assign Next[2] = ;
 
 endmodule
